@@ -29,7 +29,7 @@ function GUI:Startup()
 	-- Properties
 
 	Startup.Name = "Startup"
-	Startup.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Startup.Parent = game.CoreGui
 	Startup.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Frame.Parent = Startup
@@ -167,7 +167,7 @@ function GUI:Main(xt)
 	-- Properties
 
 	Startup.Name = math.random(1,10000000)
-	Startup.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+	Startup.Parent = game.CoreGui
 	Startup.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Frame.Parent = Startup
