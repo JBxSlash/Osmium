@@ -377,6 +377,81 @@ function GUI:Main(xt)
 	end)
 	local tabs = {}
 	
+	local nt = Instance.new("Frame")
+	nt.Size = UDim2.new(0,100,1,0)
+	nt.Position = UDim2.new(1,-125,0,-25)
+	nt.BackgroundTransparency = 1
+	nt.Parent = Startup
+	local uilist = Instance.new("UIListLayout")
+	uilist.Parent = nt
+	uilist.FillDirection = Enum.FillDirection.Vertical
+	uilist.VerticalAlignment = Enum.VerticalAlignment.Bottom
+	uilist.HorizontalAlignment = Enum.HorizontalAlignment.Right
+	uilist.Padding = UDim.new(0,10)
+	function notify(header: string,bodys: string)
+		local Frame = Instance.new("Frame")
+		local UICorner = Instance.new("UICorner")
+		local upper = Instance.new("TextLabel")
+		local body = Instance.new("TextLabel")
+
+		--Properties:
+
+		Frame.Parent = nt
+		Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		Frame.BackgroundTransparency = 0.300
+		Frame.Position = UDim2.new(0.719417036, 0, 0.795454502, 0)
+		Frame.Size = UDim2.new(0, 260, 0, 75)
+		Frame.AutomaticSize = Enum.AutomaticSize.X
+
+		UICorner.Parent = Frame
+
+		upper.Name = "upper"
+		upper.Parent = Frame
+		upper.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		upper.BackgroundTransparency = 1.000
+		upper.Position = UDim2.new(0.038, 0, 0, 0)
+		upper.Size = UDim2.new(0, 163, 0, 29)
+		upper.Font = Enum.Font.SourceSansBold
+		upper.TextColor3 = Color3.fromRGB(255, 255, 255)
+		upper.TextScaled = true
+		upper.TextSize = 14.000
+		upper.TextWrapped = true
+		upper.TextXAlignment = Enum.TextXAlignment.Left
+		upper.AutomaticSize = Enum.AutomaticSize.X
+
+		body.Name = "body"
+		body.Parent = Frame
+		body.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		body.BackgroundTransparency = 1.000
+		body.Position = UDim2.new(0.038, 0,0.5, -10)
+		body.Size = UDim2.new(0, 163,0, 37)
+		body.Font = Enum.Font.SourceSans
+		body.TextColor3 = Color3.fromRGB(255, 255, 255)
+		body.TextScaled = true
+		body.TextSize = 14.000
+		body.TextWrapped = true
+		body.TextXAlignment = Enum.TextXAlignment.Left
+		body.AutomaticSize = Enum.AutomaticSize.X
+		body.Text = bodys
+		upper.Text = header
+		
+		Frame.BackgroundTransparency = 1
+		upper.TextTransparency = 1
+		body.TextTransparency = 1
+		local ts = game:GetService("TweenService")
+		task.spawn(function()
+			ts:Create(Frame,TweenInfo.new(.5,Enum.EasingStyle.Quad),{BackgroundTransparency = .3}):Play(0)
+			ts:Create(upper,TweenInfo.new(.5,Enum.EasingStyle.Quad),{TextTransparency = 0}):Play(0)
+			ts:Create(body,TweenInfo.new(.5,Enum.EasingStyle.Quad),{TextTransparency = 0}):Play(0)
+			task.wait(3)
+			ts:Create(Frame,TweenInfo.new(.5,Enum.EasingStyle.Quad),{BackgroundTransparency = 1}):Play(0)
+			ts:Create(upper,TweenInfo.new(.5,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play(0)
+			ts:Create(body,TweenInfo.new(.5,Enum.EasingStyle.Quad),{TextTransparency = 1}):Play(0)
+			task.wait(.5)
+			Frame:Destroy()
+
+		end)
+	end
 	function newTab(text: string)
 		local tab = Tab:Clone()
 		tab.Parent = ScrollingFrame
@@ -444,8 +519,25 @@ function GUI:Main(xt)
 				newButton.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
 				newButton.Text = xrt
 				newButton.BorderSizePixel = 0
+				newButton.ClipsDescendants = true
 				newButton.Size = UDim2.new(1,0,0,36)
-				newButton.MouseButton1Up:Connect(callback)
+				newButton.MouseButton1Up:Connect(function()
+						task.spawn(callback)
+						local mouse = game.Players.LocalPlayer:GetMouse()
+						local c = Instance.new("Frame")
+						c.Size = UDim2.new(0,10,0,10)
+						c.AnchorPoint = Vector2.new(0.5,0.5)
+						c.ZIndex = 0
+						c.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+					c.Position = UDim2.new(0,mouse.X - newButton.AbsolutePosition.X,0,mouse.Y - newButton.AbsolutePosition.Y)
+						local k = Instance.new("UICorner")
+						k.Parent = c
+						k.CornerRadius = UDim.new(1,0)
+						c.Parent = newButton
+					ts:Create(c,TweenInfo.new(1,Enum.EasingStyle.Quad),{BackgroundTransparency = 1,Size = UDim2.new(0,newButton.AbsoluteSize.X,0,newButton.AbsoluteSize.Y*(newButton.AbsoluteSize.X/tab.AbsoluteSize.Y))}):Play(0)
+						task.wait(1)
+						c:Destroy()
+				end)
 			end
 			local function newLabel(xrt,bold: boolean)
 				local newButton = Instance.new("TextLabel")
@@ -489,6 +581,187 @@ function GUI:Main(xt)
 					checkEnabled()
 					callback(enabled)
 				end)
+				function changeState(state: boolean,callback: boolean)
+					enabled = state
+					checkEnabled()
+					if callback then
+						callback(enabled)
+					end
+					
+				end
+				return {["ChangeState"]=changeState}
+			end
+			function newBool(name,current,min,max)
+				local Frame = Instance.new("Frame")
+				local Frame_2 = Instance.new("Frame")
+				local UICorner33 = Instance.new("UICorner")
+				local TextButton = Instance.new("TextButton")
+				local UICorner_22 = Instance.new("UICorner")
+				local Frame_3 = Instance.new("Frame")
+				local UICorner_32 = Instance.new("UICorner")
+				local TextBox = Instance.new("TextBox")
+				local TextBox2 = Instance.new("TextLabel")
+
+				Frame.Parent = drop.container
+				Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				Frame.BackgroundTransparency = 1.000
+				Frame.BorderSizePixel = 0
+				Frame.Size = UDim2.new(0, 336, 0, 24)
+
+				Frame_2.Parent = Frame
+				Frame_2.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
+				Frame_2.Position = UDim2.new(0.190476194, 0, 0.291666657, 0)
+				Frame_2.Size = UDim2.new(0.625, 0, 0.349999994, 0)
+
+				UICorner33.Parent = Frame_2
+
+				TextButton.Parent = Frame_2
+				TextButton.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+				TextButton.Position = UDim2.new(0, 0, -0.3, 0)
+				TextButton.Size = UDim2.new(0, 12, 1.45000005, 0)
+				TextButton.ZIndex = 2
+				TextButton.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
+				TextButton.Text = ""
+				TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+				TextButton.TextSize = 14.000
+
+				UICorner_22.CornerRadius = UDim.new(1, 0)
+				UICorner_22.Parent = TextButton
+
+				Frame_3.Parent = Frame_2
+				Frame_3.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+				Frame_3.Size = UDim2.new(0, 0, 1, 0)
+
+				local ui2iss = Instance.new("UIStroke")
+				ui2iss.Parent = Frame_3
+				ui2iss.Transparency = .9
+				ui2iss.Color = Color3.fromRGB(85, 170, 255)
+				ui2iss.Thickness = 4
+
+				local ui2isss = Instance.new("UIStroke")
+				ui2isss.Parent = TextButton
+				ui2isss.Transparency = .9
+				ui2isss.Color = Color3.fromRGB(85, 170, 255)
+				ui2isss.Thickness = 4
+				ui2isss.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+				UICorner_32.Parent = Frame_3
+
+				TextBox.Parent = Frame
+				TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextBox.BackgroundTransparency = 1.000
+				TextBox.Size = UDim2.new(0.169642791, 0, 1, 0)
+				TextBox.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
+				TextBox.Text = "0"
+				TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+				TextBox.TextScaled = true
+				TextBox.TextSize = 14.000
+				TextBox.TextWrapped = true
+				TextBox.Position = UDim2.new(1-0.169642791, 0, 0)
+
+				TextBox2.Parent = Frame
+				TextBox2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+				TextBox2.BackgroundTransparency = 1.000
+				TextBox2.Size = UDim2.new(0.169642791, 0, 1, 0)
+				TextBox2.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
+				TextBox2.Text = "0"
+				TextBox2.TextColor3 = Color3.fromRGB(255, 255, 255)
+				TextBox2.TextScaled = true
+				TextBox2.TextSize = 14.000
+				TextBox2.TextWrapped = true
+				TextBox2.Name = "abt"
+				local objectMin = min
+				local objectMax = max
+				local objectValue = current
+
+				local slider = Frame
+
+				local isDragging = false
+				slider.abt.Text = name
+				slider.Frame.TextButton.MouseButton1Down:Connect(function()
+					isDragging = true
+				end)
+				game:GetService("UserInputService").InputEnded:Connect(function(ey)
+					if ey.UserInputType == Enum.UserInputType.MouseButton1 then
+						isDragging = false
+					end
+				end)
+				slider.Parent = drop.container
+				slider.TextBox.Text = objectValue
+				slider.Frame.TextButton.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+				slider.Frame.Frame.BackgroundColor3 =  Color3.fromRGB(85, 170, 255)
+				local m = Instance.new("IntValue")
+				task.spawn(function()
+					while task.wait() do
+						slider.Frame.TextButton.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+						slider.Frame.Frame.BackgroundColor3 =  Color3.fromRGB(85, 170, 255)
+						m.Value = objectValue
+						if isDragging then
+							local button = slider.Frame.TextButton
+							local mousePosition = game.Players.LocalPlayer:GetMouse().X
+							local currentPosition = slider.Frame.AbsolutePosition.X - (button.AbsoluteSize.X/2)
+							local maxPosition = currentPosition + button.AbsoluteSize.X
+							slider.TextBox.Text = math.floor((objectMax * (math.clamp(mousePosition - currentPosition,0,slider.Frame.AbsoluteSize.X)/slider.Frame.AbsoluteSize.X)) * 10)/10
+							button.Position = UDim2.new(-.05, math.clamp(mousePosition - currentPosition,0,slider.Frame.AbsoluteSize.X), -0.25, 0)
+							slider.Frame.Frame.Size = UDim2.new(0,math.clamp(mousePosition - currentPosition,0,slider.Frame.AbsoluteSize.X),1,0)
+						else
+							local button = slider.Frame.TextButton
+							local currentPosition = slider.Frame.AbsolutePosition.X - (button.AbsoluteSize.X/2)
+							local maxPosition = currentPosition + button.AbsoluteSize.X
+							slider.Frame.TextButton.Position = UDim2.new(-.05, math.clamp(slider.Frame.AbsoluteSize.X*((tonumber(slider.TextBox.Text) or 1)/objectMax),0,slider.Frame.AbsoluteSize.X), -0.25, 0)
+							slider.Frame.Frame.Size = UDim2.new(0,math.clamp(slider.Frame.AbsoluteSize.X*((tonumber(slider.TextBox.Text) or 1)/objectMax),0,slider.Frame.AbsoluteSize.X),1,0)
+						end
+						m.Value = tonumber(slider.TextBox.Text) or 1
+					end
+				end)
+				return m
+			end
+			function newBind(xrt,callback: "Callback")
+				local newButton2 = Instance.new("TextLabel")
+				newButton2.Parent = drop.container
+				newButton2.TextXAlignment = Enum.TextXAlignment.Left
+				newButton2.TextScaled = true
+				newButton2.TextColor3 =Color3.new(1,1,1)
+				newButton2.BackgroundColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+				newButton2.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
+				newButton2.BorderSizePixel = 0
+				newButton2.Size = UDim2.new(.2,0,0,36)
+				newButton2.Text = xrt
+				local newButton =	Instance.new("TextButton")
+				newButton.Parent = newButton2
+				newButton.TextXAlignment = Enum.TextXAlignment.Left
+				newButton.TextScaled = true
+				newButton.TextColor3 =Color3.new(1,1,1)
+				newButton.BackgroundColor3 = Color3.new(0.0588235, 0.0588235, 0.0588235)
+				newButton.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
+				newButton.Text = "[Key]"
+				newButton.BorderSizePixel = 0
+				newButton.Size = UDim2.new(0,36,0,36)
+				newButton.Position = UDim2.new(4,-40,0,0)
+				local key = nil
+				newButton.MouseButton1Up:Connect(function()
+					newButton.Text = "[...]"
+					key = nil
+					key = game:GetService("UserInputService").InputBegan:Wait()
+					
+					if key.KeyCode == Enum.KeyCode.Delete or key.KeyCode == Enum.KeyCode.Unknown then
+						key = nil
+						newButton.Text = "[Key]"
+					else
+						key = key.KeyCode
+						newButton.Text = "[".. key.Name.. "]"
+					end
+				end)
+				game:GetService("UserInputService").InputBegan:Connect(function(keye,gpe)
+					if not gpe then
+						if key then
+							if key == keye.KeyCode then
+								callback()
+							end
+						end
+					end
+				end)
+				return newButton
 			end
 			function newInput(xrt,pre,unfocused: "Callback")
 				local newButton2 = Instance.new("TextLabel")
@@ -570,9 +843,26 @@ function GUI:Main(xt)
 					tab.open.TextXAlignment = Enum.TextXAlignment.Left
 					tab.open.Text = "	".. name.. " "
 					tab.Name = text
+					tab.ClipsDescendants = true
 					tabs[name] = tab
 					table.insert(tabs2,tab)
-					tab.open.MouseButton1Down:Connect(onClick)
+					tab.open.MouseButton1Down:Connect(function()
+						task.spawn(onClick)
+						local mouse = game.Players.LocalPlayer:GetMouse()
+						local c = Instance.new("Frame")
+						c.Size = UDim2.new(0,10,0,10)
+						c.AnchorPoint = Vector2.new(0.5,0.5)
+						c.ZIndex = 0
+						c.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+						c.Position = UDim2.new(0,mouse.X - tab.AbsolutePosition.X,0,mouse.Y - tab.AbsolutePosition.Y)
+						local k = Instance.new("UICorner")
+						k.Parent = c
+						k.CornerRadius = UDim.new(1,0)
+						c.Parent = tab
+						ts:Create(c,TweenInfo.new(1,Enum.EasingStyle.Quad),{BackgroundTransparency = 1,Size = UDim2.new(0,tab.AbsoluteSize.X,0,tab.AbsoluteSize.Y*(tab.AbsoluteSize.X/tab.AbsoluteSize.Y))}):Play(0)
+						task.wait(1)
+						c:Destroy()
+					end)
 				end
 				function functions:RemoveSelect(name)
 					local tab = tabs[name]
@@ -596,6 +886,8 @@ function GUI:Main(xt)
 				["NewInput"] = newInput;
 				["NewSwitch"] = newSwitch;
 				["NewLabel"] = newLabel;
+				["NewBind"] = newBind;
+				["NewSlider"] = newBool;
 			}
 		end
 		return {
@@ -603,7 +895,7 @@ function GUI:Main(xt)
 			["NewLabel"] = newLabel;
 		}
 	end
-	return {["NewTab"] = newTab}
+	return {["NewTab"] = newTab,["Notify"] = notify}
 end
 function module:Window(app)
 
