@@ -1,5 +1,9 @@
 local module = {}
 local GUI = {}
+local parent =game.Players.LocalPlayer:WaitForChild("PlayerGui")
+if not game:GetService("RunService"):IsStudio() then
+	parent = game.CoreGui
+end
 function GUI:Startup()
 	local Startup = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
@@ -29,7 +33,7 @@ function GUI:Startup()
 	-- Properties
 
 	Startup.Name = "Startup"
-	Startup.Parent = game.CoreGui
+	Startup.Parent = parent
 	Startup.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Frame.Parent = Startup
@@ -167,7 +171,7 @@ function GUI:Main(xt)
 	-- Properties
 
 	Startup.Name = math.random(1,10000000)
-	Startup.Parent = game.CoreGui
+	Startup.Parent = parent
 	Startup.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 	Frame.Parent = Startup
@@ -411,7 +415,7 @@ function GUI:Main(xt)
 		upper.BackgroundTransparency = 1.000
 		upper.Position = UDim2.new(0.038, 0, 0, 0)
 		upper.Size = UDim2.new(0, 163, 0, 29)
-		upper.Font = Enum.Font.SourceSansBold
+		upper.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.SemiBold)
 		upper.TextColor3 = Color3.fromRGB(255, 255, 255)
 		upper.TextScaled = true
 		upper.TextSize = 14.000
@@ -425,7 +429,7 @@ function GUI:Main(xt)
 		body.BackgroundTransparency = 1.000
 		body.Position = UDim2.new(0.038, 0,0.5, -10)
 		body.Size = UDim2.new(0, 163,0, 37)
-		body.Font = Enum.Font.SourceSans
+		body.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
 		body.TextColor3 = Color3.fromRGB(255, 255, 255)
 		body.TextScaled = true
 		body.TextSize = 14.000
@@ -456,8 +460,12 @@ function GUI:Main(xt)
 		local tab = Tab:Clone()
 		tab.Parent = ScrollingFrame
 		tab.open.Text = " ".. text.. " "
-		tab.Name = text
+		tab.open.TextScaled = false
+		tab.open.TextSize = 20
 		
+		tab.Name = text
+		tab.AutomaticSize = Enum.AutomaticSize.X
+		tab.open.AutomaticSize = Enum.AutomaticSize.X
 		
 		
 		local scroll = Frame_4:Clone()
