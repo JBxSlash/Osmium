@@ -4,6 +4,18 @@ local parent =game.Players.LocalPlayer:WaitForChild("PlayerGui")
 if not game:GetService("RunService"):IsStudio() then
 	parent = game.CoreGui
 end
+function bindRS(name,waitTime,func)
+	local lt = tick()
+	game:GetService("RunService"):BindToRenderStep(name,1,function()
+		if tick() - lt > waitTime then
+			func()
+		end
+	end)
+	
+end
+function unbindRS(name)
+	game:GetService("RunService"):UnbindFromRenderStep(name)
+end
 function GUI:Startup()
 	local Startup = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
@@ -413,13 +425,12 @@ function GUI:Main(xt)
 		upper.Parent = Frame
 		upper.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		upper.BackgroundTransparency = 1.000
-		upper.Position = UDim2.new(0.038, 0, 0, 0)
-		upper.Size = UDim2.new(0, 163, 0, 29)
+		upper.Position = UDim2.new(0,5, 0, 5)
+		upper.Size = UDim2.new(0, 163, 0, 40)
 		upper.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.SemiBold)
 		upper.TextColor3 = Color3.fromRGB(255, 255, 255)
-		upper.TextScaled = true
-		upper.TextSize = 14.000
-		upper.TextWrapped = true
+		upper.TextSize = 50
+		upper.TextWrapped = false
 		upper.TextXAlignment = Enum.TextXAlignment.Left
 		upper.AutomaticSize = Enum.AutomaticSize.X
 
@@ -427,17 +438,19 @@ function GUI:Main(xt)
 		body.Parent = Frame
 		body.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 		body.BackgroundTransparency = 1.000
-		body.Position = UDim2.new(0.038, 0,0.5, -10)
-		body.Size = UDim2.new(0, 163,0, 37)
+		body.Position = UDim2.new(0,5,0.6, 0)
+		body.Size = UDim2.new(0, 163,0, 20)
 		body.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
 		body.TextColor3 = Color3.fromRGB(255, 255, 255)
-		body.TextScaled = true
-		body.TextSize = 14.000
-		body.TextWrapped = true
+		body.TextSize = 30
+		body.TextWrapped = false
 		body.TextXAlignment = Enum.TextXAlignment.Left
 		body.AutomaticSize = Enum.AutomaticSize.X
 		body.Text = bodys
 		upper.Text = header
+		
+		Frame.Size = UDim2.new(0,Frame.AbsoluteSize.X + 5, 0, 75)
+
 		
 		Frame.BackgroundTransparency = 1
 		upper.TextTransparency = 1
@@ -589,10 +602,10 @@ function GUI:Main(xt)
 					checkEnabled()
 					callback(enabled)
 				end)
-				function changeState(state: boolean,callback: boolean)
+				function changeState(state: boolean,doCallback: boolean)
 					enabled = state
 					checkEnabled()
-					if callback then
+					if doCallback then
 						callback(enabled)
 					end
 					
@@ -744,7 +757,7 @@ function GUI:Main(xt)
 				newButton.FontFace = Font.new("rbxassetid://12187365977",Enum.FontWeight.Light)
 				newButton.Text = "[Key]"
 				newButton.BorderSizePixel = 0
-				newButton.Size = UDim2.new(0,36,0,36)
+				newButton.Size = UDim2.new(0,newButton2.AbsoluteSize.Y,0,newButton2.AbsoluteSize.Y)
 				newButton.Position = UDim2.new(4,-40,0,0)
 				local key = nil
 				newButton.MouseButton1Up:Connect(function()
