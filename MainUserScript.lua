@@ -4,18 +4,7 @@ local parent =game.Players.LocalPlayer:WaitForChild("PlayerGui")
 if not game:GetService("RunService"):IsStudio() then
 	parent = game.CoreGui
 end
-function bindRS(name,waitTime,func)
-	local lt = tick()
-	game:GetService("RunService"):BindToRenderStep(name,1,function()
-		if tick() - lt > waitTime then
-			func()
-		end
-	end)
-	
-end
-function unbindRS(name)
-	game:GetService("RunService"):UnbindFromRenderStep(name)
-end
+
 function GUI:Startup()
 	local Startup = Instance.new("ScreenGui")
 	local Frame = Instance.new("Frame")
@@ -764,7 +753,7 @@ function GUI:Main(xt)
 					newButton.Text = "[...]"
 					key = nil
 					key = game:GetService("UserInputService").InputBegan:Wait()
-					
+					task.wait()
 					if key.KeyCode == Enum.KeyCode.Delete or key.KeyCode == Enum.KeyCode.Unknown then
 						key = nil
 						newButton.Text = "[Key]"
